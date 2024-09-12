@@ -1,0 +1,27 @@
+FROM ruby:3.1.3
+
+# 必要なパッケージをインストール
+RUN apt-get update -qq \
+    && apt-get install -y nodejs default-mysql-client vim git less \
+    && rm -rf /var/lib/apt/lists/*
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# GemfileとGemfile.lockをコピーしてbundle installを実行
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
+RUN bundle install
+
+# Gitのデフォルトブランチをmainに設定
+RUN git config --global init.defaultBranch main
+
+# entrypoint.shをコピーして実行権限を付与
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+
+# コンテナ起動時に実行させるスクリプト
+ENTRYPOINT [ "entrypoint.sh" ]
+
+# Railsサーバーを起動
+CMD ["rails", "server", "-b", "0.0.0.0"]
