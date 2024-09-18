@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
-rm -f /api-app/tmp/pids/server.pid
+rm -f app/tmp/pids/server.pid
 exec "$@"

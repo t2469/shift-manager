@@ -2,7 +2,7 @@ FROM ruby:3.1.3
 
 # 必要なパッケージをインストール
 RUN apt-get update -qq \
-    && apt-get install -y nodejs default-mysql-client vim git less \
+    && apt-get install -y nodejs default-mysql-client vim less \
     && rm -rf /var/lib/apt/lists/*
 
 # 作業ディレクトリを設定
@@ -12,9 +12,6 @@ WORKDIR /app
 COPY Gemfile /app/Gemfile
 COPY Gemfile.lock /app/Gemfile.lock
 RUN bundle install
-
-# Gitのデフォルトブランチをmainに設定
-RUN git config --global init.defaultBranch main
 
 # entrypoint.shをコピーして実行権限を付与
 COPY entrypoint.sh /usr/bin/
